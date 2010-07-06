@@ -144,7 +144,7 @@
 		maxHeight=500;
 		var w=(data.w+50<minWidth)?minWidth:data.w+50;
 		var w=(data.w+50>maxWidth)?maxWidth:data.w+50;
-		var h=(data.h+50>500)?maxHeight:data.h+50;
+		var h=(data.h+50>maxHeight)?maxHeight:'auto';
 		img_src_result = data.src;
 		$("#s_result_image").attr('title', data.src);
 		$("#s_result_image").attr('src', dirtemp+data.src);
