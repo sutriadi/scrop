@@ -20,8 +20,10 @@
  *      MA 02110-1301, USA.
  */
 
+define('INDEX_AUTH', '1');
+
 if (!defined('SENAYAN_BASE_DIR')) {
-    require '../../../../sysconfig.inc.php';
+    require '../../../../../sysconfig.inc.php';
     require SENAYAN_BASE_DIR.'admin/default/session.inc.php';
 }
 
@@ -31,33 +33,21 @@ $can_read = utility::havePrivilege('plugins', 'r');
 $can_write = utility::havePrivilege('plugins', 'w');
 
 if (!$can_read && !$can_write) {
-	die('<div>You dont have enough privileges to view this section</div>');
+	die(sprintf('<div class="errorBox">%s</div>', __('You dont have enough privileges to view this section')));
 }
 
 $conf = $_SESSION['plugins_conf'];
-include('../func.php');
+include('../../func.php');
+include('../../s_datatables/func.php');
 
 checkip();
 checken();
 checkref();
 
-$version = '0.1';
-
-$cssdir = "./css/ui-themes/";
-$styles = scandir($cssdir);
-sort($styles);
-$defstyle = variable_get('scrop_style', 'default');
-$optstyle = '';
-foreach ($styles as $style)
-{
-	$selected = $style == $defstyle ? 'selected' : '';
-	if ($style != "." AND $style != ".." AND is_dir($cssdir . "/" . $style))
-		$optstyle .= "<option $selected value=\"$style\">$style</option>";
-}
-$optstyles = "<select id=\"theme\" accesskey=\"T\" class=\"ui-state-default ui-corner-all\" onchange=\"reload(this.value, '$cssdir')\">"
-		. $optstyle
-	. "</select>";
-$onload = "reload('$defstyle', '$cssdir');";
+$info = (object) plugin_get('scrop');
+$name = isset($info->plugin_name) ? $info->plugin_name : 'SCrop';
+$version = isset($info->plugin_version) ? $info->plugin_version : 'beta';
+$version .= isset($info->plugin_build) ? " build $info->plugin_build" : $version;
 
 include('./template.php');
 

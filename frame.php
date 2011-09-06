@@ -20,7 +20,9 @@
  *      MA 02110-1301, USA.
  */
 
-$level = '../../../../';
+define('INDEX_AUTH', '1');
+
+$level = '../../../../../';
 require $level . 'sysconfig.inc.php';
 
 require SENAYAN_BASE_DIR.'admin/default/session.inc.php';
@@ -29,14 +31,14 @@ require SENAYAN_BASE_DIR.'admin/default/session_check.inc.php';
 $can_read = utility::havePrivilege('plugins', 'r');
 
 if (!$can_read)
-	die('<div>You dont have enough privileges to view this section</div>');
+	die(sprintf('<div class="errorBox">%s</div>', __('You dont have enough privileges to view this section')));
 
 $conf = $_SESSION['plugins_conf'];
-require('../func.php');
+require('../../func.php');
 
 checkip();
-checken();
-checkref();
+checken('scrop');
+checkref('plugin');
 
 $s_conf = json_decode(variable_get('scrop_conf'));
 $s_std = json_decode(variable_get('scrop_std'));
@@ -90,10 +92,34 @@ if ($def_sel_h > $def_h || $def_sel_w > $def_w)
 ?>
 <html>
 <head>
-	<link href="./css/ui-themes/default/jquery-ui-1.8.9.custom.css" rel="Stylesheet" type="text/css" />
-	<link href="./css/jquery.cropzoom.css" rel="Stylesheet" type="text/css" /> 
-	<script type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="./js/jquery-ui.custom.min.js"></script>
+	<style type="text/css" title="currentStyle">
+		@import "../../<?php echo css_get();?>";
+		@import "./css/jquery.cropzoom.css";
+
+		#control {
+			display: block;
+			width: 500px;
+			margin: 5px 0;
+			padding: 5px;
+		}
+		#zoom, #rot {
+			margin:auto;
+			height:25px;
+		}
+		#movement {
+			width: 100px;
+			height: 100px;
+			float: left;
+			margin: auto;
+		}
+        #buttons {
+			display: block;
+			float: none;
+			padding: 5px;
+			margin: 5px 0;
+		}	</style>
+	<script type="text/javascript" language="javascript" src="../../library/js/jquery.min.js"></script>
+	<script type="text/javascript" language="javascript" src="../../library/ui/js/jquery-ui.custom.min.js"></script>
 	<script type="text/javascript" src="./js/jquery.cropzoom.js"></script>
 	<script type="text/javascript">
 		var cropzoom_def = {
@@ -149,30 +175,6 @@ if ($def_sel_h > $def_h || $def_sel_w > $def_w)
 		});
 
 	</script>
-	<style>
-		#control {
-			display: block;
-			width: 500px;
-			margin: 5px 0;
-			padding: 5px;
-		}
-		#zoom, #rot {
-			margin:auto;
-			height:25px;
-		}
-		#movement {
-			width: 100px;
-			height: 100px;
-			float: left;
-			margin: auto;
-		}
-        #buttons {
-			display: block;
-			float: none;
-			padding: 5px;
-			margin: 5px 0;
-		}
-	</style>
 </head>
 <body>
 
@@ -184,8 +186,8 @@ if ($def_sel_h > $def_h || $def_sel_w > $def_w)
 	</div>
 	<div class="cleared"></div>
 	<div id="buttons">
-		<button class="button" id="restore">Restore</button>
-		<button class="button" id="crop">Crop</button>
+		<button class="button" id="restore"><?php echo __('Restore');?></button>
+		<button class="button" id="crop"><?php echo __('Crop');?></button>
 	</div>
 
 </body>

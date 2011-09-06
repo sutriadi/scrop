@@ -1,5 +1,5 @@
 SCrop Plugin for SLiMS
-version 0.1 build 16125201072011
+version 0.1 build 20025330052011
 
 Copyright (c) 1432 H / 2011 M
 Indra Sutriadi Pipii (indra@sutriadi.web.id)
@@ -22,6 +22,5 @@ Indra Sutriadi Pipii (indra@sutriadi.web.id)
 - klik link Launch pada baris plugin aktif bernama SCrop
 
 CHANGELOG
-Version 0.1
-Build 16125201072011
-- Day/Date released: Tuesday, 29 Rajab 1432 H / 1 July 2011 M
+Version 0.1 build 20025330052011
+Hari/Tanggal rilis: Selasa, 27 Jumadil Akhir 1432 H / 31 Mei 2011 M

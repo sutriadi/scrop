@@ -20,25 +20,27 @@
  *      MA 02110-1301, USA.
  */
 
+define('INDEX_AUTH', '1');
+
 if (!defined('SENAYAN_BASE_DIR')) {
-	require '../../../../../sysconfig.inc.php';
+	require '../../../../../../sysconfig.inc.php';
 	require SENAYAN_BASE_DIR.'admin/default/session.inc.php';
 }
 require SENAYAN_BASE_DIR.'admin/default/session_check.inc.php';
 
 $can_read = utility::havePrivilege('plugins', 'r');
-$can_write = utility::havePrivilege('plugins', 'w');
+$can_read = utility::havePrivilege('plugins', 'w');
 
-if (!$can_read AND !$can_write) {
-      die('<div class="errorBox">You dont have enough privileges to view this section</div>');
+if ( ! $can_read) {
+      die(sprintf('<div class="errorBox">%s</div>', __('You dont have enough privileges to view this section')));
 }
 
 $conf = $_SESSION['plugins_conf'];
-include('../../func.php');
+include('../../../func.php');
 
 checkip();
-checken();
-checkref();
+checken('scrop');
+checkref('plugin');
 
 $s_conf = json_decode(variable_get('scrop_conf'));
 $s_std = json_decode(variable_get('scrop_std'));
@@ -47,7 +49,7 @@ $tempdir = FILES_UPLOAD_DIR . $s_conf->tempdir . DIRECTORY_SEPARATOR;
 
 $data = array(
 	'error' => 1,
-	'msg' => 'Data yang dikirimkan tidak valid!'
+	'msg' => __('Data yang dikirimkan tidak valid!')
 );
 
 /*
@@ -76,18 +78,20 @@ if (isset($_POST) AND isset($_POST['file']) AND isset($_POST['action']) AND isse
 	switch ($act)
 	{
 		case "delete":
-			$data['msg'] = sprintf("Delete gambar sementara member: <strong>%s</strong> gagal!", $id);
+			$data['msg'] = sprintf(__('Delete gambar sementara member: <strong>%s</strong> gagal!'), $id);
 			if (unlink($tempdir . $file))
 			{
 				$data['error'] = 0;
-				$data['msg'] = sprintf("Delete gambar sementara member: <strong>%s</strong> berhasil!", $id);
+				$data['msg'] = sprintf(__('Delete gambar sementara member: <strong>%s</strong> berhasil!'), $id);
 			}
 			break;
 		case "save":
 		default:
-			$data['msg'] = sprintf("Update gambar member: <strong>%s</strong> gagal!", $id);
+			$data['msg'] = sprintf(__('Update gambar member: <strong>%s</strong> gagal!'), $id);
 
-			copy(FILES_UPLOAD_DIR . $s_conf->tempdir . "/" . $file, IMAGES_BASE_DIR . "persons/" . $file);
+			$from_file = FILES_UPLOAD_DIR . $s_conf->tempdir . "/" . $file;
+			$to_file = IMAGES_BASE_DIR . "persons/" . $file;
+			copy($from_file, $to_file);
 			if (isset($_POST['orig']))
 			{
 				$orig = IMAGES_BASE_DIR . "persons/" . $_POST['orig'];
@@ -103,7 +107,7 @@ if (isset($_POST) AND isset($_POST['file']) AND isset($_POST['action']) AND isse
 			if ($save)
 			{
 				$data['error'] = 0;
-				$data['msg'] = sprintf("Update gambar member: <strong>%s</strong> berhasil!", $id);
+				$data['msg'] = sprintf(__('Update gambar member: <strong>%s</strong> berhasil!'), $id);
 			}
 	}
 }

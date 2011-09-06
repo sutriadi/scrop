@@ -25,5 +25,4 @@ if (!defined('MODULES_WEB_ROOT_DIR')) {
 }
 
 variable_del('scrop_style');
-variable_del('scrop_std');
 variable_del('scrop_conf');

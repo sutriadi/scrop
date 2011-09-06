@@ -21,107 +21,90 @@
  */
 
 if ( ! defined('SENAYAN_BASE_DIR')) { exit(); }
-if (!$can_read)
-	die('<div class="errorBox">You dont have enough privileges to view this section</div>');
+if ( ! $can_read)
+	die(sprintf('<div class="errorBox">%s</div>', __('You dont have enough privileges to view this section')));
 
 $s_conf = json_decode(variable_get('scrop_conf'));
 $s_std = json_decode(variable_get('scrop_std'));
+
+// mengambil daftar nama kolom tabel member, dan urutan kolom
+$base_cols_name = base_cols_name('scrop');
+$fcols = cols_get('scrop');
+
+$dtables = table_render('scrop');
+extract($dtables);
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>SCrop Plugin v <?php echo $version;?></title>
+	<title><?php echo $name;?> <?php echo $version;?></title>
 	<style type="text/css" title="currentStyle">
-		@import "./css/demo_page.css";
-		@import "./css/demo_table_jui.css";
+		@import "../../library/dataTables/css/demo_page.css";
+		@import "../../library/dataTables/css/demo_table_jui.css";
+		@import "../../<?php echo css_get();?>";
 		@import "./css/s.css";
 		@import "./css/custom.css";
 	</style>
-	<script type="text/javascript">var dirtemp='../../../../<?php echo FILES_DIR . "/" . $s_conf->tempdir . "/";?>';</script>
-	<script type="text/javascript" language="javascript" src="./js/jquery.min.js"></script>
-	<script type="text/javascript" language="javascript" src="./js/jquery-ui.custom.min.js"></script>
-	<script type="text/javascript" language="javascript" src="./js/jquery.dataTables.js"></script>
+	<script type="text/javascript">
+		<?php if (isset($php_js)) echo $php_js;?>
+		var dirtemp='../../../../../<?php echo FILES_DIR . "/" . $s_conf->tempdir . "/";?>';
+	</script>
+	<script type="text/javascript" language="javascript" src="../../library/js/jquery.min.js"></script>
+	<script type="text/javascript" language="javascript" src="../../library/ui/js/jquery-ui.custom.min.js"></script>
+	<script type="text/javascript" language="javascript" src="../../library/dataTables/js/jquery.dataTables.js"></script>
 	<script type="text/javascript" language="javascript" src="./js/jquery.jqupload.min.js"></script>
 	<script type="text/javascript" language="javascript" src="./js/jquery-custom-file-input.js"></script>
 	<script type="text/javascript" charset="utf-8" language="javascript" src="./js/s.js"></script>
 	<script type="text/javascript" charset="utf-8" language="javascript" src="./js/custom.js"></script>
 
 </head>
-<body id="dt_example" onload="<?php echo $onload;?>;">
+<body id="dt_example">
 	<div id="container">
-		<div style="float:right;">
-			<label for="theme"><u>T</u>heme:</label>
-			<?php echo $optstyles;?>
-		</div>
-		<h1>SCrop v <?php echo $version;?></h1>
+		<h1><?php echo $name;?> <?php echo $version;?></h1>
 		<div id="demo">
 			<form id="formulir" name="formulir" target="" action="" method="POST">
 				<div style="text-align:left; padding-bottom: 1em; float: left;" class="ui-widget">
 					<button type="button" id="to_options" title="Alt+Shift+O" accesskey="O">
-						<u>O</u>ptions
+						<?php echo __('<u>O</u>ptions');?>
 					</button>
 				</div>
 				<div style="text-align:right; padding-bottom:1em;" class="ui-widget">
 					<button type="button" id="crop" name="crop" title="Alt+Shift+C" accesskey="C" class="ui-button ui-button-text ui-state-default ui-corner-all">
-						<u>C</u>rop
+						<?php echo __('Do <u>C</u>rop');?>
 					</button>
 					<button type="button" id="upload" name="upload" title="Alt+Shift+U" accesskey="U" class="ui-button ui-button-text ui-state-default ui-corner-all">
-						<u>U</u>pload
+						<?php echo __('Do <u>U</u>pload');?>
 					</button>
 				</div>
 				<div style="margin: 5px 0px;" width="100%">
-					<button type="button" onclick="alluncheck(this);" id="btn2" accesskey="U" title="Alt+Shift+U" class="ui-button ui-state-default ui-corner-all"><u>U</u>ncheck All</button>
+					<button type="button" onclick="alluncheck(this);" id="btn2" accesskey="E" title="Alt+Shift+E" class="ui-button ui-state-default ui-corner-all"><?php echo __('R<u>e</u>set');?></button>
 				</div>
 				<table cellpadding="0" cellspacing="0" border="0" class="display" id="members">
-					<thead>
-						<tr>
-							<th colspan="6">Members Details</th>
-						</tr>
-						<tr>
-							<th width="4%"></th>
-							<th width="15%">ID</th>
-							<th width="20%">Name</th>
-							<th width="10%">Type</th>
-							<th width="30%">Institution</th>
-							<th>Email</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td colspan="6" class="dataTables_empty">Loading data from server</td>
-						</tr>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th></th>
-							<th style="padding:0px;"><input value="ID" type="text" class="search_init" style="width: 90px;" /></th>
-							<th style="padding:0px;"><input value="Name" type="text" class="search_init" style="width: 115px;" /></th>
-							<th style="padding:0px;"><input value="Type" type="text" class="search_init" style="width: 60px;" /></th>
-							<th style="padding:0px;"><input value="Institution" type="text" class="search_init" style="width: 200px;" /></th>
-							<th style="padding:0px;"><input value="E-mail" type="text" class="search_init" style="width: 200px;" /></th>
-						</tr>
-					</tfoot>
+					<?php echo $thead;?>
+					<?php echo $tbody;?>
+					<?php echo $tfoot;?>
 				</table>
 				<div style="margin: 5px 0px;" width="100%">
-					<button type="button" onclick="alluncheck(this);" id="btn5" accesskey="U" title="Alt+Shift+U" class="ui-button ui-state-default ui-corner-all"><u>U</u>ncheck All</button>
+					<button type="button" onclick="alluncheck(this);" id="btn5" accesskey="E" title="Alt+Shift+E" class="ui-button ui-state-default ui-corner-all"><?php echo __('R<u>e</u>set');?></button>
 				</div>
 			</form>
 		</div>
 		<div class="spacer"></div>
 		<div style="text-align:left; padding-bottom:1em; float: left;" class="ui-widget">
 			<button type="button" id="reload" accesskey="R" title="Alt+Shift+R" class="ui-button ui-state-default ui-corner-all">
-				<u>R</u>eload
+				<?php echo __('<u>R</u>eload');?>
 			</button>
 		</div>
 		<div style="text-align:right; padding-bottom:1em;" class="ui-widget">
 			<button type="button" id="tutup" accesskey="X" title="Alt+Shift+X" class="ui-button ui-state-default ui-corner-all">
-				E<u>x</u>it
+				<?php echo __('E<u>x</u>it');?>
 			</button>
 		</div>
 		<address style="text-align: center;">
 			Copyright &copy; 1431-1432 H / 2010-2011 M by Indra Sutriadi Pipii.<br />
-			Build with jQuery and plugins: jQuery-UI + jQuery-CropZoom + jQUpload + dataTables.
+			Build with jQuery-UI + jQuery-CropZoom + dataTables plugin.
 		</address>
 	</div>
 	<div id="s_dialog" title="Information">
@@ -138,11 +121,11 @@ $s_std = json_decode(variable_get('scrop_std'));
 				<input type="file" id="s_file" name="picture" />
 			</p>
 			<p>
-				File: <span id="s_file_name">Tidak ada</span>
+				<?php echo __('File');?>: <span id="s_file_name"><?php echo __('No file');?></span>
 			</p>
 			<p>
-				<input type="button" id="s_choose" value="Browse..." />
-				<input type="submit" value="Upload" />
+				<input type="button" id="s_choose" value="<?php echo __('Browse...');?>" />
+				<input type="submit" value="<?php echo __('Upload');?>" />
 			</p>
 		</form>
 		<iframe id="s_upload_frame" name="s_upload_frame" src="" border="0" width="0" height="0" style="display: none;"></iframe>
@@ -160,7 +143,7 @@ $s_std = json_decode(variable_get('scrop_std'));
 		$selected = (isset($s_conf->unit) AND $unit == $s_conf->unit) ? "selected" : "";
 		$options_units .= "<option $selected value=\"$unit\">$unit</option>";
 	}
-	$set_unit = ($set_units === TRUE AND isset($s_conf->unit)) ? $s_conf->unit : '';
+	$set_unit = ($set_units === TRUE AND isset($s_conf->unit)) ? $s_conf->units->$s_conf->unit : '';
 
 	$checked_ratio = (isset($s_conf->ratio) AND $s_conf->ratio == true) ? "checked" : "";
 	
@@ -177,38 +160,38 @@ $s_std = json_decode(variable_get('scrop_std'));
 		<form name="s_options_form">
 			<fieldset>
 				<p>
-					<label for="source" class="lmid">Sumber:</label>
+					<label for="source" class="lmid"><?php echo __('Source');?>:</label>
 					<select name="source" disabled>
 						<?php echo $options_sources; ?>
 					</select>
 				</p>
 				<p>
-					<label for="tempdir" class="lmid">Folder Temp:</label>
+					<label for="tempdir" class="lmid"><?php echo __('Temp Folder');?>:</label>
 					<input id="tempdir" name="tempdir" size="20" type="text" class="text ui-corner-all" value="<?php echo isset($s_conf->tempdir) ? $s_conf->tempdir : '';?>" />
 				</p>
 				<div id="s_options_accordion">
 					<div>
-						<h3><a href="#">Ukuran</a></h3>
+						<h3><a href="#"><?php echo __('Size');?></a></h3>
 						<div>
 							<p>
-								<label for="unit" class="lmid">Satuan:</label>
+								<label for="unit" class="lmid"><?php echo __('Unit');?>:</label>
 								<select id="unit" name="unit" onchange="satuan(this);">
 									<?php echo $options_units; ?>
 								</select>
 							</p>
 							<p>
-								<label for="width" class="lmid">Lebar:</label>
+								<label for="width" class="lmid"><?php echo __('Width');?>:</label>
 								<input id="width" name="width" maxlength="4" size="4" type="text" class="text ui-corner-all" value="<?php echo isset($s_conf->width) ? $s_conf->width : '200';?>" />
 								<span class="unit"><?php echo $set_unit;?></span>
 							</p>
 							<p>
-								<label for="height" class="lmid">Tinggi:</label>
+								<label for="height" class="lmid"><?php echo __('Height');?>:</label>
 								<input id="height" name="height" maxlength="4" size="4" type="text" class="text ui-corner-all" value="<?php echo isset($s_conf->height) ? $s_conf->height : '300';?>" />
 								<span class="unit"><?php echo $set_unit;?></span>
 							</p>
 							<p>
-								<label for="ratio" class="llong">Gambar proporsional?</label>
-								<input id="ratio" type="checkbox" name="ratio" <?php echo $checked_ratio;?> /> <span>Ya!</span>
+								<label for="ratio" class="llong"><?php echo __('Keep Ratio?');?></label>
+								<input id="ratio" type="checkbox" name="ratio" <?php echo $checked_ratio;?> /> <span><?php echo __('Yes!');?></span>
 							</p>
 						</div>
 					</div>

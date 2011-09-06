@@ -20,32 +20,34 @@
  *      MA 02110-1301, USA.
  */
 
+define('INDEX_AUTH', '1');
+
 if (!defined('SENAYAN_BASE_DIR')) {
-	require '../../../../../sysconfig.inc.php';
+	require '../../../../../../sysconfig.inc.php';
 	require SENAYAN_BASE_DIR.'admin/default/session.inc.php';
 }
 require SENAYAN_BASE_DIR.'admin/default/session_check.inc.php';
 
 $can_read = utility::havePrivilege('plugins', 'r');
-$can_write = utility::havePrivilege('plugins', 'w');
+$can_read = utility::havePrivilege('plugins', 'w');
 
-if (!$can_read AND !$can_write) {
-      die('<div class="errorBox">You dont have enough privileges to view this section</div>');
+if (!$can_read) {
+      die(sprintf('<div class="errorBox">%s</div>', __('You dont have enough privileges to view this section')));
 }
 
 $conf = $_SESSION['plugins_conf'];
-include('../../func.php');
+include('../../../func.php');
 
 checkip();
-checken();
-checkref();
+checken('scrop');
+checkref('plugin');
 
 $s_conf = json_decode(variable_get('scrop_conf'));
 $s_std = json_decode(variable_get('scrop_std'));
 
-if (isset($_POST) AND isset($_POST['members']) AND is_array($_POST['members']))
+if (isset($_POST) AND isset($_POST['member']) AND is_array($_POST['member']))
 {
-	$member_id = $_POST['members'][0];
+	$member_id = $_POST['member'][0];
 	$query = sprintf("SELECT member_image FROM member WHERE member_id = '%s'", mysql_escape_string($member_id));
 	$data = array();
 	$image = $dbs->query($query);

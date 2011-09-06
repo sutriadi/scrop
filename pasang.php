@@ -39,17 +39,32 @@ $cropconf = array(
 	'ratio' => TRUE,
 );
 
-variable_set('scrop_style', 'default');
-variable_set('scrop_std', $cropstd, 'json');
-variable_set('scrop_conf', $cropconf, 'json');
+variable_set('scrop_std', json_encode($cropstd, JSON_FORCE_OBJECT));
+variable_set('scrop_conf', json_encode($cropconf, JSON_FORCE_OBJECT));
+
+$dtables = array(
+	'table' => 'scrop',
+	'type' => 'member',
+	'title' => 'SCrop',
+	'desc' => __('DataTables for plugin SCrop.'),
+	'first_col' => 'radio',
+	'base_cols' => '["member_id","member_name","member_type_id","member_email","inst_name"]',
+	'end_cols' => '',
+	'php_code' => 0,
+	'add_code' => '',
+	'windowed' => 1,
+	'sort' => '{"member_id":"0","member_name":"1","member_type_name":"2","member_email":"5","inst_name":"4"}'
+);
+
+dtable_set($dtables);
 
 $tempdir = FILES_UPLOAD_DIR . $cropconf['tempdir'];
 
-if (is_writable($tempdir))
+if (is_writable(FILES_UPLOAD_DIR))
 {
-	mkdir($tempdir);
+	mkdir(FILES_UPLOAD_DIR . $cropconf['tempdir']);
 }
 else
 {
-	$errmsg[] = 'Direktori upload file: ' . $tempdir . ' tidak bisa ditulisi';
+	$errmsg[] = __('Direktori upload file tidak bisa ditulisi');
 }

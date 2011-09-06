@@ -134,7 +134,7 @@
 	}
 
 	function get_id() {
-		return id=$('input[name="members[]"]').serializeArray();
+		return id=$('input[name="member[]"]').serializeArray();
 	}
 
 	function set_image(data) {
@@ -201,7 +201,7 @@
 			if(id.length==0){
 				no_member();
 			}else{
-				member_id=$('input[name="members[]"]:checked').val();
+				member_id=$('input[name="member[]"]:checked').val();
 				$.post(
 					"./php/image.php",
 					id,
@@ -299,6 +299,7 @@
 					$.post(
 						"./php/update.php",
 						{ "file": img_src_result, "orig": img_src_origin, "action": "save", "id": get_id() },
+						//~ {  },
 						function(data) {
 							if(data.error==0){
 								tips.html(data.msg);
@@ -322,6 +323,16 @@
 				$("#s_result_image").removeAttr("src");
 			}
 		}
+
+		/* untuk ngetes doang */
+			//~ $.get("../../library/dataTables/php/processing.php?plugin=smember&table=smember", {},
+		//~ $("#ngetes").click( function() {
+			//~ $.get("./php/setup.php?plugin=smember&table=smember", {},
+			   //~ function(data){
+				 //~ alert(data);
+			   //~ }, "html"
+			//~ );
+		//~ });
 
 		var s_options_conf = {
 			width: "660",
@@ -373,7 +384,7 @@
 			$('#s_options').dialog("open");
 		});
 
-		oTable=$('#members').dataTable( {
+		var jsDef = {
 			"bProcessing": true,
 			"bServerSide": true,
 			"bAutoWidth": false,
@@ -381,21 +392,17 @@
 			"bFilter": true,
 			"aLengthMenu": [[5, 10, 20, 30, 40, 50], [5, 10, 20, 30, 40, 50]],
 			"sPaginationType": "full_numbers",
-			"sAjaxSource": "./php/processing.php",
+			"sAjaxSource": "../../library/dataTables/php/processing.php?plugin=scrop&table=scrop",
 			"fnServerData": fnDataTablesPipeline,
-			"aoColumns": [
-				{ "sClass": "center", "bSortable": false },
-				{ "sName": "member_id"},
-				{ "sName": "member_name"},
-				{ "sName": "member_type_name"},
-				{ "sName": "inst_name"},
-				{ "sName": "member_email"},
-			],
 			"sScrollY": "200px",
 			"oLanguage": {
 				"sSearch": "Search all:"
 			}
-		} );
+		};
+
+		$.extend(true, jsDef, phpDef);
+
+		oTable=$('#members').dataTable( jsDef );
 
 		$("tfoot input").keyup( function () {
 			/* Filter on the column (the index) of this element */
@@ -424,41 +431,12 @@
 
 	} );
 
-	/*** template functions ***/
-
-	var fileadded=''
-
-	function reload(css,dir)
-	{
-		if(fileadded.length!=0)
-			remove()
-		if(fileadded!=css){
-			var filename=dir+css+"/jquery-ui-1.8.9.custom.css"
-			var fileref=document.createElement("link")
-			fileref.setAttribute("rel", "stylesheet")
-			fileref.setAttribute("type", "text/css")
-			fileref.setAttribute("href", filename)
-			document.getElementsByTagName("head")[0].appendChild(fileref)
-			fileadded=css
-			dir=dir
-		}
-	}
+	/*** options functions ***/
 
 	function satuan(t)
 	{
 		var unit=t.options[t.selectedIndex].text;
 		$('span[class="unit"]').text(unit);
-	}
-
-	function remove()
-	{
-		var filename=fileadded
-		var targetattr='href'
-		var allsuspects=document.getElementsByTagName('link')
-		for(var i=allsuspects.length;i>=0;i--){
-			if(allsuspects[i]&&allsuspects[i].getAttribute(targetattr)!=null&&allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1)
-				allsuspects[i].parentNode.removeChild(allsuspects[i])
-		}
 	}
 
 	/*** some additional functions ***/
@@ -473,14 +451,9 @@
 	function alluncheck(t)
 	{
 		f=t.form
-		cb=f.elements['members[]']
-		for(n=0;n<cb.length;n++)
-			cb[n].checked=false
-	}
-
-	function chtheme(t)
-	{
-		s=t.selectedIndex
-		if(s!=0)
-			alert('No theme!')
+		cb=f.elements['member[]']
+		if(cb){
+			for(n=0;n<cb.length;n++)
+				cb[n].checked=false
+		}
 	}
