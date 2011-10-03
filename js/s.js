@@ -226,7 +226,7 @@
 			if(id.length==0){
 				no_member();
 			}else{
-				member_id=$('input[name="members[]"]:checked').val();
+				member_id=$('input[name="member[]"]:checked').val();
 				$.post(
 					"./php/image.php",
 					id,

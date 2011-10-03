@@ -103,8 +103,10 @@ extract($dtables);
 			</button>
 		</div>
 		<address style="text-align: center;">
-			Copyright &copy; 1431-1432 H / 2010-2011 M by Indra Sutriadi Pipii.<br />
-			Build with jQuery-UI + jQuery-CropZoom + dataTables plugin.
+			Copyright &copy; 1432 H / 2011 M by <a href="http://sutriadi.web.id/" target="_blank">Indra Sutriadi Pipii</a>.<br />
+			Build with <a href="http://jqueryui.com" target="_blank">jQuery-UI</a>
+			+ <a href="http://www.cropzoom.com.ar/">jQuery-CropZoom</a>
+			+ <a href="http://datatables.net/" target="_blank">dataTables</a> plugin.
 		</address>
 	</div>
 	<div id="s_dialog" title="Information">
